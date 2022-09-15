@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CharacterController : MonoBehaviour
@@ -17,12 +18,19 @@ public class CharacterController : MonoBehaviour
     private Animator animator;
     private int estado = 1;
 
+    public AudioClip salto;
+    public AudioClip upgrade;
+
+    AudioSource audiosource;
+
     private void Start()
     {
+       
         rigibod = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         saltosRestantes = saltosMaximos;
         animator = GetComponent<Animator>();
+        audiosource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -52,6 +60,7 @@ public class CharacterController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && saltosRestantes > 0)
         {
             saltosRestantes--;
+            audiosource.PlayOneShot(salto);     
             rigibod.velocity = new Vector2(rigibod.velocity.x, 0f);
             rigibod.AddForce(Vector2.up * fuerzaSalto, ForceMode2D.Impulse);
             animator.SetInteger("isRunning", 2);
@@ -86,7 +95,8 @@ public class CharacterController : MonoBehaviour
         if (collision.gameObject.tag == "zombie")
         {
 
-            
+            audiosource.PlayOneShot(upgrade);
+            transform.localScale = new Vector2(2, 2);
             Debug.Log("MUERTO");
             estado = 3;
             velocidad = 0;

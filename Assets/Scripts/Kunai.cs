@@ -1,13 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Kunai : MonoBehaviour
 {
     public float velocity = 20;
+    private TextMesh scoreText;
     Rigidbody2D rigibod;
+
+    private GameManagerController gameManager;
+
     void Start()
     {
+        gameManager = FindObjectOfType<GameManagerController>();
         rigibod = GetComponent<Rigidbody2D>();
         Destroy(this.gameObject, 5);
     }
@@ -24,8 +30,14 @@ public class Kunai : MonoBehaviour
         {
 
             Destroy(collision.gameObject);
-            Destroy(this.gameObject);
-            Debug.Log("zombie");
+            gameManager.GanarPuntos(10);
+            gameManager.SaveGame();
+          
+             Destroy(this.gameObject);
+             Debug.Log("zombie");
+
+            //Cambiar el texto del puntaje
+
         }
     }
 }
