@@ -8,6 +8,10 @@ TagManager:
   - vacio
   - checkpoint
   - zombie
+  - silver
+  - bronze
+  - gold
+  - point
   layers:
   - Default
   - TransparentFX

@@ -13,14 +13,25 @@ public class GameManagerController : MonoBehaviour
     public TMP_Text scoreText;
     public TMP_Text livesText;
 
+    public TMP_Text bronzeText;
+    public TMP_Text silverText;
+    public TMP_Text goldText;
+
     private int score;
     private int lives;
+    //Coins
+    private int bronzeCoin;
+    private int silverCoin;
+    private int goldCoin;
     // Start is called before the first frame update
     void Start()
     {
 
         score = 0;
         lives = 3;
+        bronzeCoin = 0;
+        silverCoin = 0;
+        goldCoin = 0;
         PrintScoreInScreen();
         PrintLivesInScreen();
         LoadGame();
@@ -98,5 +109,54 @@ public class GameManagerController : MonoBehaviour
     private void PrintLivesInScreen()
     {
         livesText.text = "Vidas: " + lives;
+    }
+
+    //bronze coin
+    public int bronzeC()
+    {
+        return bronzeCoin;
+    }
+
+    public void GanarBronze(int puntos)
+    {
+        bronzeCoin += puntos;
+        PrintBronzeInScreen();
+    }
+
+    private void PrintBronzeInScreen()
+    {
+        bronzeText.text = "Bronze " + bronzeCoin;
+    }
+    //silver
+    public int silverC()
+    {
+        return silverCoin;
+    }
+
+    public void GanarSilver(int puntos)
+    {
+        silverCoin += puntos;
+        PrintSilverInScreen();
+    }
+
+    private void PrintSilverInScreen()
+    {
+        silverText.text = "Silver: " + silverCoin;
+    }
+    //gold
+    public int goldC()
+    {
+        return goldCoin;
+    }
+
+    public void GanarGold(int puntos)
+    {
+        goldCoin += puntos;
+        PrintGoldInScreen();
+    }
+
+    private void PrintGoldInScreen()
+    {
+        goldText.text = "Gold: " + goldCoin;
     }
 }

@@ -10,18 +10,21 @@ public class CharacterController : MonoBehaviour
     public int saltosMaximos;
     public LayerMask capaSuelo;
     public GameObject kunai;
+    public Vector2 POINT;
 
     private Rigidbody2D rigibod;
     private BoxCollider2D boxCollider;
     private bool mirandoDerecha =true;
     private int saltosRestantes;
     private Animator animator;
-    private int estado = 1;
 
     public AudioClip salto;
     public AudioClip upgrade;
+    public AudioClip coin;
 
     AudioSource audiosource;
+
+    private GameManagerController gameManager;
 
     private void Start()
     {
@@ -31,14 +34,18 @@ public class CharacterController : MonoBehaviour
         saltosRestantes = saltosMaximos;
         animator = GetComponent<Animator>();
         audiosource = GetComponent<AudioSource>();
+        gameManager = FindObjectOfType<GameManagerController>();
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
+            float inputMovimiento = Input.GetAxis("Horizontal");
             var bulletPostion = transform.position + new Vector3(3, 0, 0);
             Instantiate(kunai, bulletPostion, Quaternion.identity);
+            rigibod.velocity = new Vector2(inputMovimiento * velocidad, rigibod.velocity.y);
+            GestionarOrientacion(inputMovimiento);
         }
         ProcesarMovimiento();
         ProcesarSalto();
@@ -63,23 +70,26 @@ public class CharacterController : MonoBehaviour
             audiosource.PlayOneShot(salto);     
             rigibod.velocity = new Vector2(rigibod.velocity.x, 0f);
             rigibod.AddForce(Vector2.up * fuerzaSalto, ForceMode2D.Impulse);
-            animator.SetInteger("isRunning", 2);
+            animator.SetInteger("Estado", 2);
         }
     }
 
     void ProcesarMovimiento()
     {
         //Logica de movimiento
+        float inputMovimiento = Input.GetAxis("Horizontal");
 
-        rigibod.velocity = new Vector2(velocidad, rigibod.velocity.y);
+        if (inputMovimiento != 0f)
+        {
+            animator.SetInteger("Estado", 1);
+        }
+        else
+        {
+            animator.SetInteger("Estado", 0);
+        }
 
-        animator.SetInteger("isRunning", estado);
-        
-     
-        
-
-       
-        
+        rigibod.velocity = new Vector2(inputMovimiento * velocidad, rigibod.velocity.y);
+        GestionarOrientacion(inputMovimiento);
     }
 
     void GestionarOrientacion (float inputMovimiento)
@@ -95,11 +105,43 @@ public class CharacterController : MonoBehaviour
         if (collision.gameObject.tag == "zombie")
         {
 
-            audiosource.PlayOneShot(upgrade);
-            transform.localScale = new Vector2(2, 2);
-            Debug.Log("MUERTO");
-            estado = 3;
-            velocidad = 0;
+
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "bronze")
+        {
+            Destroy(this);
+            audiosource.PlayOneShot(coin);
+            Debug.Log("bronze");
+            gameManager.GanarBronze(10);
+            gameManager.SaveGame();
+
+        }
+        if (collision.gameObject.tag == "silver")
+        {
+            Destroy(this);
+            audiosource.PlayOneShot(coin);
+            Debug.Log("silver");
+            gameManager.GanarSilver(20);
+            gameManager.SaveGame();
+
+        }
+        if (collision.gameObject.tag == "gold")
+        {
+            Destroy(this);
+            audiosource.PlayOneShot(coin);
+            Debug.Log("gold");
+            gameManager.GanarGold(30);
+            gameManager.SaveGame();
+
+        }
+        if (collision.gameObject.tag == "point")
+        {
+            POINT = collision.transform.position;
+            Debug.Log("juego guardado");
+            gameManager.SaveGame();
 
         }
     }
