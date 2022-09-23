@@ -21,6 +21,9 @@ public class Kunai : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
+
         rigibod.velocity = new Vector2(velocity, 0f);
     }
 

@@ -10,6 +10,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class GameManagerController : MonoBehaviour
 {
+    public const int SCENE_1 = 0;
+    public const int SCENE_2 = 1;
+    public const int SCENE_3 = 2;
+
+
     public TMP_Text scoreText;
     public TMP_Text livesText;
 
@@ -19,6 +24,8 @@ public class GameManagerController : MonoBehaviour
 
     private int score;
     private int lives;
+    private float x;
+    private float y;
     //Coins
     private int bronzeCoin;
     private int silverCoin;
@@ -32,6 +39,8 @@ public class GameManagerController : MonoBehaviour
         bronzeCoin = 0;
         silverCoin = 0;
         goldCoin = 0;
+        x = transform.position.x;
+        y = transform.position.y;
         PrintScoreInScreen();
         PrintLivesInScreen();
         LoadGame();
@@ -55,9 +64,29 @@ public class GameManagerController : MonoBehaviour
 
         GameData data = new GameData();
         data.Score = score;
+        data.CoinsB = bronzeCoin;
+        data.CoinsS = silverCoin;
+        data.CoinsG = goldCoin;
+        data.x = x;
+        data.y = y;
+
         BinaryFormatter bf = new BinaryFormatter();
         bf.Serialize(file, data);
         file.Close();
+        Debug.Log("Score: " + data.Score);
+        Debug.Log("Score: " + data.CoinsB);
+        Debug.Log("Score: " + data.CoinsS);
+        Debug.Log("Score: " + data.CoinsG);
+        Debug.Log("Position x: " + data.x);
+        Debug.Log("Position y: " + data.y);
+
+    }
+
+    public void guardarPosi(float xp, float yp)
+    {
+        x = xp;
+        y = yp;
+        Debug.Log("Guardado x:" + x +"/"+ "Guardado y: "+ y);
     }
     public void LoadGame()
     {
@@ -77,6 +106,11 @@ public class GameManagerController : MonoBehaviour
         GameData data = (GameData)bf.Deserialize(file);
         file.Close();
         score = data.Score;
+        bronzeCoin =data.CoinsB  ;
+        silverCoin = data.CoinsS ;
+        goldCoin = data.CoinsG ;
+        x = data.x ;
+        y = data.y ;
         PrintScoreInScreen();
     }
     //hasta aqui el codigo
@@ -104,6 +138,9 @@ public class GameManagerController : MonoBehaviour
     private void PrintScoreInScreen()
     {
         scoreText.text = "Puntaje: " + score;
+        bronzeText.text = "Bronze: " + bronzeCoin;
+        silverText.text = "Silver: " + silverCoin;
+        goldText.text = "Gold: " + goldCoin;
     }
 
     private void PrintLivesInScreen()
@@ -125,7 +162,7 @@ public class GameManagerController : MonoBehaviour
 
     private void PrintBronzeInScreen()
     {
-        bronzeText.text = "Bronze " + bronzeCoin;
+        bronzeText.text = "Bronze: " + bronzeCoin;
     }
     //silver
     public int silverC()

@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class MegaMovement : MonoBehaviour
 {
     public float velocidad;
     public float fuerzaSalto;
@@ -15,7 +13,7 @@ public class CharacterController : MonoBehaviour
 
     private Rigidbody2D rigibod;
     private BoxCollider2D boxCollider;
-    private bool mirandoDerecha =true;
+    private bool mirandoDerecha = true;
     private int saltosRestantes;
     private Animator animator;
 
@@ -27,9 +25,10 @@ public class CharacterController : MonoBehaviour
 
     private GameManagerController gameManager;
 
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
-       
+
         rigibod = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         saltosRestantes = saltosMaximos;
@@ -38,19 +37,21 @@ public class CharacterController : MonoBehaviour
         gameManager = FindObjectOfType<GameManagerController>();
     }
 
+    // Update is called once per frame
     void Update()
     {
-       if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X))
         {
             float inputMovimiento = Input.GetAxis("Horizontal");
             var bulletPostion = transform.position + new Vector3(2, 0, 0);
             Instantiate(kunai, bulletPostion, Quaternion.identity);
-            GestionarOrientacionK(inputMovimiento);
+            GestionarOrientacion(inputMovimiento);
+
         }
+
         ProcesarMovimiento();
         ProcesarSalto();
     }
-
     bool EstaEnSuelo()
     {
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, new Vector2(boxCollider.bounds.size.x, boxCollider.bounds.size.y), 0f, Vector2.down, 0.2f, capaSuelo);
@@ -67,21 +68,22 @@ public class CharacterController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && saltosRestantes > 0)
         {
             saltosRestantes--;
-            audiosource.PlayOneShot(salto);     
+            audiosource.PlayOneShot(salto);
             rigibod.velocity = new Vector2(rigibod.velocity.x, 0f);
             rigibod.AddForce(Vector2.up * fuerzaSalto, ForceMode2D.Impulse);
-            animator.SetInteger("Estado", 2);
+            animator.SetInteger("Estado", 3);
         }
     }
 
     void ProcesarMovimiento()
     {
+        
         //Logica de movimiento
         float inputMovimiento = Input.GetAxis("Horizontal");
 
         if (inputMovimiento != 0f)
         {
-            animator.SetInteger("Estado", 1);
+            animator.SetInteger("Estado", 2);
         }
         else
         {
@@ -91,70 +93,16 @@ public class CharacterController : MonoBehaviour
         rigibod.velocity = new Vector2(inputMovimiento * velocidad, rigibod.velocity.y);
         GestionarOrientacion(inputMovimiento);
     }
-
-    void GestionarOrientacion (float inputMovimiento)
-    {
-        if (mirandoDerecha == true && inputMovimiento < 0 || mirandoDerecha == false && inputMovimiento > 0)
-        {
-            mirandoDerecha = !mirandoDerecha;
-            
-            transform.localScale = new Vector2 (- transform.localScale.x, transform.localScale.y);
-
-    
-
-        }
-    }
-    void GestionarOrientacionK(float inputMovimiento)
+    void GestionarOrientacion(float inputMovimiento)
     {
         if (mirandoDerecha == true && inputMovimiento < 0 || mirandoDerecha == false && inputMovimiento > 0)
         {
             mirandoDerecha = !mirandoDerecha;
 
-            kunai.transform.localScale = new Vector2(-kunai.transform.localScale.x, kunai.transform.localScale.y);
+            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+
 
 
         }
     }
-
-
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("bronze"))
-        {
-            audiosource.PlayOneShot(coin);
-            gameManager.GanarBronze(10);
-            Destroy(collision.gameObject);
-
-        }
-        if (collision.gameObject.CompareTag("silver"))
-        {
-
-            audiosource.PlayOneShot(coin);
-            gameManager.GanarSilver(20);
-            Destroy(collision.gameObject);
-
-        }
-        if (collision.gameObject.CompareTag("gold"))
-        {
-            audiosource.PlayOneShot(coin);
-            gameManager.GanarGold(30);
-            Destroy(collision.gameObject);
-
-        }
-        if (collision.gameObject.CompareTag("point"))
-        {
-            POINT = collision.transform.position;
-            Debug.Log("juego guardado");
-            gameManager.SaveGame();
-            gameManager.guardarPosi(POINT.x, POINT.y);
-        }
-        if (collision.gameObject.CompareTag("vacio"))
-        {
-            transform.position = POINT;
-        }
-    }
-
 }
-
-

@@ -35,11 +35,11 @@ public class EnemyPatrol : MonoBehaviour
         if(_target.transform.position.x == minX)
         {
             _target.transform.position = new Vector2(maxX, transform.position.y);
-            transform.localScale = new Vector3(1, 1, 1);
+            transform.localScale = new Vector3(-1, 1, 1);
         }else if(_target.transform.position.x == maxX)
         {
             _target.transform.position = new Vector2(minX, transform.position.y);
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.localScale = new Vector3(1, 1, 1);
         }
     }
 
@@ -56,13 +56,12 @@ public class EnemyPatrol : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("Target reached");
+        
         transform.position = new Vector2(_target.transform.position.x, transform.position.y);
 
-        Debug.Log("Waiting for " + waitingTime + "seconds");
+        
         yield return new WaitForSeconds(waitingTime);
 
-        Debug.Log("Waited enough, let´s update the target and move again");
         UpdateTarget();
         StartCoroutine(PartolToTarget());
     }

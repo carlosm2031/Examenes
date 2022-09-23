@@ -6,5 +6,11 @@ using UnityEngine;
 public class GameData 
 {
     public int Score { get; set; }
-    public int Coins { get; set; }
+    public int CoinsB { get; set; }
+
+    public int CoinsS { get; set; }
+    public int CoinsG { get; set; }
+    public float y { get; set; }
+    public float x { get; set; }
+
 }
