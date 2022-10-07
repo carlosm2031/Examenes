@@ -7,9 +7,11 @@ using UnityEngine.UI;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine.SceneManagement;
 
 public class GameManagerController : MonoBehaviour
 {
+    
     public const int SCENE_1 = 0;
     public const int SCENE_2 = 1;
     public const int SCENE_3 = 2;
@@ -21,15 +23,18 @@ public class GameManagerController : MonoBehaviour
     public TMP_Text bronzeText;
     public TMP_Text silverText;
     public TMP_Text goldText;
+    public TMP_Text monedasText;
 
-    private int score;
-    private int lives;
+    public int score;
+    public int lives;
     private float x;
     private float y;
     //Coins
-    private int bronzeCoin;
+    public int bronzeCoin;
     private int silverCoin;
     private int goldCoin;
+
+    private int monedas;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,6 +49,10 @@ public class GameManagerController : MonoBehaviour
         PrintScoreInScreen();
         PrintLivesInScreen();
         LoadGame();
+    }
+    private void Update()
+    {
+        
     }
 
     //Metodo para Data del juego
@@ -67,6 +76,7 @@ public class GameManagerController : MonoBehaviour
         data.CoinsB = bronzeCoin;
         data.CoinsS = silverCoin;
         data.CoinsG = goldCoin;
+        data.lives = lives;
         data.x = x;
         data.y = y;
 
@@ -138,9 +148,10 @@ public class GameManagerController : MonoBehaviour
     private void PrintScoreInScreen()
     {
         scoreText.text = "Puntaje: " + score;
-        bronzeText.text = "Bronze: " + bronzeCoin;
+        bronzeText.text = "Monedas: " + bronzeCoin;
         silverText.text = "Silver: " + silverCoin;
         goldText.text = "Gold: " + goldCoin;
+        livesText.text = "Vidas: " + lives;
     }
 
     private void PrintLivesInScreen()
@@ -162,7 +173,7 @@ public class GameManagerController : MonoBehaviour
 
     private void PrintBronzeInScreen()
     {
-        bronzeText.text = "Bronze: " + bronzeCoin;
+        bronzeText.text = "Monedas: " + bronzeCoin;
     }
     //silver
     public int silverC()

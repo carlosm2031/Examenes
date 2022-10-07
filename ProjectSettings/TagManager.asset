@@ -12,6 +12,7 @@ TagManager:
   - bronze
   - gold
   - point
+  - portal
   layers:
   - Default
   - TransparentFX

@@ -33,7 +33,7 @@ public class Kunai : MonoBehaviour
         {
 
             Destroy(collision.gameObject);
-            gameManager.GanarPuntos(10);
+            gameManager.GanarPuntos(1);
             gameManager.SaveGame();
           
              Destroy(this.gameObject);
